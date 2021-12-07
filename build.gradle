@@ -28,8 +28,6 @@ dependencies {
 }
 
 shadowJar {
-    archiveBaseName.set(rootProject.name)
-    archiveVersion.set(version)
     configurations = [project.configurations.shadow]
 }
 
