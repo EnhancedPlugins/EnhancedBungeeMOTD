@@ -8,7 +8,7 @@ A BungeeCord plugin to display the subserved information as MOTD and player coun
 
 ## Installation ⚙️
 
-Download the plugin [here]() and put it in your BungeeCord plugins folder. Restart or reload it, and you're done!
+Download the plugin [here](https://github.com/EnhancedPlugins/EnhancedBungeeMOTD/releases) and put it in your BungeeCord plugins folder. Restart or reload it, and you're done!
 
     
 ## Authors 🙇🏽‍♂️
