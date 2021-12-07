@@ -1,11 +1,13 @@
 package de.blocki.enhancedplugins.enhancedbungeemotd.utils.pinger;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.var;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.xbill.DNS.Lookup;
+import org.xbill.DNS.Record;
 import org.xbill.DNS.SRVRecord;
 import org.xbill.DNS.Type;
 
@@ -16,10 +18,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -57,14 +56,14 @@ public final class MCServerPing {
       throw new IOException("Hostname cannot be null!");
     }
 
-    var serverHost = address;
-    var serverPort = port;
+    String serverHost = address;
+    int serverPort = port;
 
-    var srvRecords = new Lookup(String.format("_minecraft._tcp.%s", address), Type.SRV).run();
+    Record[] srvRecords = new Lookup(String.format("_minecraft._tcp.%s", address), Type.SRV).run();
 
     if (srvRecords != null) {
-      for (var srvRecord : srvRecords) {
-        var srv = (SRVRecord) srvRecord;
+      for (Record srvRecord : srvRecords) {
+        SRVRecord srv = (SRVRecord) srvRecord;
 
 
         serverHost = srv.getTarget().toString().replaceFirst("\\.$", "");
@@ -75,15 +74,15 @@ public final class MCServerPing {
 
     String json;
 
-    var ping = System.currentTimeMillis();
+    long ping = System.currentTimeMillis();
 
-    try (var socket = new Socket()) {
+    try (Socket socket = new Socket()) {
 
       socket.connect(new InetSocketAddress(serverHost, serverPort), 5000);
       ping = System.currentTimeMillis() - ping;
 
-      var handshakeStream = new ByteArrayOutputStream();
-      var handshake = new DataOutputStream(handshakeStream);
+      ByteArrayOutputStream handshakeStream = new ByteArrayOutputStream();
+      DataOutputStream handshake = new DataOutputStream(handshakeStream);
 
       handshake.write(0x00); // Handshake Packet
       writeVarInt(handshake, 4); // Protocol Version
@@ -92,7 +91,7 @@ public final class MCServerPing {
       handshake.writeShort(port);
       writeVarInt(handshake, 1); // Status Handshake
 
-      var out = new DataOutputStream(socket.getOutputStream());
+      DataOutputStream out = new DataOutputStream(socket.getOutputStream());
       writeVarInt(out, handshakeStream.size());
       out.write(handshakeStream.toByteArray());
 
@@ -101,18 +100,18 @@ public final class MCServerPing {
       out.writeByte(0x00); // Packet Status Request
 
       // <- STATUS RESPONSE
-      var in = new DataInputStream(socket.getInputStream());
+      DataInputStream in = new DataInputStream(socket.getInputStream());
       readVarInt(in);
-      var id = readVarInt(in);
+      int id = readVarInt(in);
 
       io(id == -1, "Server ended data stream unexpectedly.");
       io(id != 0x00, "Server returned invalid packet.");
 
-      var length = readVarInt(in);
+      int length = readVarInt(in);
       io(length == -1, "Server ended data stream unexpectedly.");
       io(length == 0, "Server returned unexpected value.");
 
-      var data = new byte[length];
+      byte[] data = new byte[length];
       in.readFully(data);
       json = new String(data, StandardCharsets.UTF_8);
 
@@ -129,13 +128,13 @@ public final class MCServerPing {
 
     }
 
-    var jsonObj = JsonParser.parseString(json).getAsJsonObject();
-    var descriptionJsonElement = jsonObj.get("description");
+    JsonObject jsonObj = JsonParser.parseString(json).getAsJsonObject();
+    JsonElement descriptionJsonElement = jsonObj.get("description");
 
     if (descriptionJsonElement.isJsonObject()) {
       // TextComponent MOTDs
 
-      var descriptionJsonObject = descriptionJsonElement.getAsJsonObject();
+      JsonObject descriptionJsonObject = descriptionJsonElement.getAsJsonObject();
 
       if (descriptionJsonObject.has("extra")) {
         descriptionJsonObject.addProperty("text",
@@ -155,8 +154,8 @@ public final class MCServerPing {
     } else {
 
       // String MOTDs
-      var description = descriptionJsonElement.getAsString();
-      var descriptionJsonObj = new JsonObject();
+      String description = descriptionJsonElement.getAsString();
+      JsonObject descriptionJsonObj = new JsonObject();
       descriptionJsonObj.addProperty("text", description);
       jsonObj.add("description", descriptionJsonObj);
 
@@ -188,8 +187,8 @@ public final class MCServerPing {
     while (true) {
       AtomicInteger k = new AtomicInteger();
 
-      var executor = Executors.newSingleThreadExecutor();
-      var future = executor.submit(() -> {
+      ExecutorService executor = Executors.newSingleThreadExecutor();
+      Future<?> future = executor.submit(() -> {
         try {
           k.set(in.readByte());
         } catch (IOException e) {
@@ -225,7 +224,7 @@ public final class MCServerPing {
   }
 
   public static void writeVarInt(DataOutputStream out, int inputParamInt) throws IOException {
-    var paramInt = inputParamInt;
+    int paramInt = inputParamInt;
     while (true) {
       if ((paramInt & 0xFFFFFF80) == 0) {
         out.writeByte(paramInt);
