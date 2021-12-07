@@ -1,4 +1,7 @@
-apply plugin: 'java'
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
+    id 'java'
+}
 
 group = 'de.blocki.enhancedplugins'
 version = '1.0'
@@ -11,8 +14,23 @@ repositories {
     }
 }
 
+configurations {
+    provided
+    compile.extendsFrom provided
+}
+
 dependencies {
     compileOnly 'net.md-5:bungeecord-api:1.18-R0.1-SNAPSHOT'
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    shadow 'com.google.code.gson:gson:2.8.9'
+    shadow 'dnsjava:dnsjava:3.4.2'
+}
+
+shadowJar {
+    archiveBaseName.set(rootProject.name)
+    archiveVersion.set(version)
+    configurations = [project.configurations.shadow]
 }
 
 def targetJavaVersion = 8
