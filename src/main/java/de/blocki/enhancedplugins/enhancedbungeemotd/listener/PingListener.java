@@ -43,6 +43,7 @@ public class PingListener implements Listener  {
 
                 try {
                     MCServerPingResponse resp = MCServerPing.getPing(address.getHostName(), address.getPort());
+                    System.out.println("Server Online");
 
                     int onlinePlayers;
                     int maxOnlinePlayers;

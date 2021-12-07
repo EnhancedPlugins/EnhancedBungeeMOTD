@@ -13,9 +13,8 @@ public final class MCServerPingResponse {
   private final int onlinePlayers;
   private final String motd;
   private final JsonArray descriptionExtras;
-  private final String serverIcon;
 
-  public MCServerPingResponse(int ping, String name, int protocol, int playerMax, int playerOnline, String motd, JsonArray descriptionExtras, String serverIcon) {
+  public MCServerPingResponse(int ping, String name, int protocol, int playerMax, int playerOnline, String motd, JsonArray descriptionExtras) {
     this.ping = ping;
     this.version = name;
     this.protocol = protocol;
@@ -23,7 +22,6 @@ public final class MCServerPingResponse {
     this.onlinePlayers = playerOnline;
     this.motd = motd;
     this.descriptionExtras = descriptionExtras;
-    this.serverIcon = serverIcon;
   }
 
   public static MCServerPingResponse serverPingFromJsonObj(JsonObject jsonObj) {
@@ -34,8 +32,7 @@ public final class MCServerPingResponse {
             jsonObj.get("players").getAsJsonObject().get("max").getAsInt(),
             jsonObj.get("players").getAsJsonObject().get("online").getAsInt(),
             jsonObj.get("description").getAsJsonObject().get("text").getAsString(),
-            (jsonObj.get("description").getAsJsonObject().get("extra") == null) ? null : jsonObj.get("description").getAsJsonObject().get("extra").getAsJsonArray(),
-            jsonObj.get("favicon").getAsString()
+            (jsonObj.get("description").getAsJsonObject().get("extra") == null) ? null : jsonObj.get("description").getAsJsonObject().get("extra").getAsJsonArray()
     );
   }
 
@@ -65,10 +62,6 @@ public final class MCServerPingResponse {
 
   public JsonArray getDescriptionExtras() {
     return descriptionExtras;
-  }
-
-  public String getServerIcon() {
-    return serverIcon;
   }
 
   public String getAsJsonString() {
