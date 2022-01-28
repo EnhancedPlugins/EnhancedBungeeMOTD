@@ -28,10 +28,10 @@ public class PingListener implements Listener  {
 
         ListenerInfo l = e.getConnection().getListener();
 
-        //hostname über die die anfrage kommt (eingabe im launcher)
+        //hostname where the ping to the server is coming from (input from launcher)
         String host = e.getConnection().getVirtualHost().getHostName();
 
-        ////domain//name///
+        ////domain//name////
         Map<String, String> proxyForcedHosts = l.getForcedHosts();
 
         proxyForcedHosts.forEach((domain, name) -> {
