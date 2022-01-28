@@ -24,7 +24,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
     shadow 'com.google.code.gson:gson:2.8.9'
-    shadow 'dnsjava:dnsjava:3.4.2'
+    shadow 'dnsjava:dnsjava:3.4.3'
 }
 
 shadowJar {
