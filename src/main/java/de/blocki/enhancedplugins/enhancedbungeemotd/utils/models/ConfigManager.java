@@ -36,11 +36,12 @@ public class ConfigManager {
         yamlConfiguration.set(path, value);
         save();
     }
-    public static void setDef(String path, Object value){
+    public static Object setDef(String path, Object value){
         if(!isSet(path)){
             yamlConfiguration.set(path, value);
             save();
         }
+        return value;
     }
 
     public static boolean isSet(String path){
