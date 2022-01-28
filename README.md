@@ -15,9 +15,3 @@ Download the plugin [here](https://github.com/EnhancedPlugins/EnhancedBungeeMOTD
 
 - [@blocki (Luca Heß)](https://twitter.com/blockiyt)
 
-
-## License 📜
-
-[MIT](https://choosealicense.com/licenses/mit/)
-
-
