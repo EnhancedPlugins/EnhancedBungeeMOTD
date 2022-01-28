@@ -9,6 +9,7 @@ import net.md_5.bungee.api.plugin.PluginManager;
 public final class EnhancedBungeeMOTD extends Plugin {
 
     private static Plugin plugin;
+    private static boolean isDebug;
 
     @Override
     public void onEnable() {
@@ -22,10 +23,21 @@ public final class EnhancedBungeeMOTD extends Plugin {
 
     private static void initConfig(){
         ConfigManager.setDef("config.showRealPlayers", true);
+        isDebug = (boolean) ConfigManager.setDef("config.isDebug", true);
         ConfigManager.set("messages.motd_server_offline", "&cThe Server is currently offline.");
+    }
+
+    public static void debug(String msg){
+        if(isDebug){
+            System.out.println("[EB-MOTD Debug] " + msg);
+        }
     }
 
     public static Plugin getPlugin() {
         return plugin;
+    }
+
+    public static boolean isDebug() {
+        return isDebug;
     }
 }

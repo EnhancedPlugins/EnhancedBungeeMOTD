@@ -1,5 +1,6 @@
 package de.blocki.enhancedplugins.enhancedbungeemotd.listener;
 
+import de.blocki.enhancedplugins.enhancedbungeemotd.EnhancedBungeeMOTD;
 import de.blocki.enhancedplugins.enhancedbungeemotd.utils.models.ConfigManager;
 import de.blocki.enhancedplugins.enhancedbungeemotd.utils.pinger.MCServerPing;
 import de.blocki.enhancedplugins.enhancedbungeemotd.utils.pinger.MCServerPingResponse;
@@ -43,7 +44,7 @@ public class PingListener implements Listener  {
 
                 try {
                     MCServerPingResponse resp = MCServerPing.getPing(address.getHostName(), address.getPort());
-                    System.out.println("Server Online");
+                    EnhancedBungeeMOTD.debug("Server online");
 
                     int onlinePlayers;
                     int maxOnlinePlayers;
@@ -64,7 +65,7 @@ public class PingListener implements Listener  {
                     e.setResponse(ping);
 
                 } catch (IOException | TimeoutException ignored) {
-                    System.out.println("Server Offline");
+                    EnhancedBungeeMOTD.debug("Server offline");
 
                     ping.setDescription(ConfigManager.getString("messages.motd_server_offline").replace("&", "§"));
                     pingPlayers.setMax(0);
