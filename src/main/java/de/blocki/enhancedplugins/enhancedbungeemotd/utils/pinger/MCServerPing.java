@@ -1,3 +1,11 @@
+/**
+ *
+ * Copyright (c) 2020-2022 Red Coke Development
+ * https://github.com/RedCokeDevelopment/MCServerPing/blob/master/LICENSE
+ *
+ * Forked by me: https://github.com/blockiyt/MCServerPing
+ *
+ */
 package de.blocki.enhancedplugins.enhancedbungeemotd.utils.pinger;
 
 import com.google.gson.JsonElement;
